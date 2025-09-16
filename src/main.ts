@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConsoleLogger, LogLevel, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { LoggerConfig } from './LoggerConfig';
 
 
 async function bootstrap() {
@@ -15,15 +16,8 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  const logger = new ConsoleLogger('JDozerFuzzer-Seeder');
-  const logLevel: LogLevel[] = [];
-  process.env.LOG_LEVEL.split(',').forEach(level => {
-    logLevel.push(level as LogLevel);
-  });
-  logger.setLogLevels(logLevel);
-
   const app = await NestFactory.create(AppModule, {
-    logger: logger
+    logger: LoggerConfig.logLevels('JDozerFuzzer-Seeder')
   });
   
   app.enableCors({
