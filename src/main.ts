@@ -25,7 +25,7 @@ async function bootstrap() {
     methods: ['POST']
   });
   app.useGlobalPipes(new ValidationPipe());
-  console.debug(process.env.APP_PORT);
-  await app.listen(+process.env.APP_PORT || 3002);
+  console.debug(process.env.FUZZER_SEEDER_PORT);
+  await app.listen(+process.env.FUZZER_SEEDER_PORT || 3002);
 }
 bootstrap();

@@ -12,7 +12,7 @@ import { randomUUID, UUID } from "crypto";
 @Injectable()
 export class EventService {
 
-    private static readonly CHANNEL = 'jdozer:fuzzer:broker';
+    private static readonly CHANNEL = process.env.FUZZER_BROKER_NAME;
     private static readonly ENTITY_TYPE = 'fuzzer-seeder';
 
     constructor(private readonly redisService: RedisService) { }
