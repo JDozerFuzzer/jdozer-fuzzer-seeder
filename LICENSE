@@ -7,6 +7,7 @@
 
                             Preamble
 
+<<<<<<< HEAD
 JDozerFuzzer - Aggressive Fuzzing Platform for HTTP APIs 
 
 Copyright (C) 2024 Cristián Saéz V. <cristiansaezv@gmail.com>
@@ -25,6 +26,8 @@ Derivative works must:
 1. Maintain this copyright notice and prohibition list.
 2. Release the complete source code under this same license.
 
+=======
+>>>>>>> 2ed7cff776eac5019dcdee77c80d6d79d30e8fd7
   The GNU Affero General Public License is a free, copyleft license for
 software and other kinds of works, specifically designed to ensure
 cooperation with the community in the case of network server software.
