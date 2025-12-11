@@ -11,7 +11,6 @@ export class Fuzzer {
     id: UUID;
     name: string;
     version: string;
-    owner: UUID;
     servers: any[];
     operationIds: string[];
 

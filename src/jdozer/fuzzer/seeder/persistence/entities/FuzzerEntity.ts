@@ -11,6 +11,5 @@ export class FuzzerEntity {
     id: UUID;
     name: string;
     version: string;
-    owner: UUID;
 
 }

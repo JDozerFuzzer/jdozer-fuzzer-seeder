@@ -34,7 +34,6 @@ export class JDozerFuzzerSeeder {
             this.fuzzer.id = randomUUID() as UUID;
             this.fuzzer.name = fields.name;
             this.fuzzer.version = fields.version;
-            this.fuzzer.owner = fields.owner;
             this.fuzzer.servers = openApi.getServers();
             this.fuzzer.operationIds = this.buildOperations(openApi);
 

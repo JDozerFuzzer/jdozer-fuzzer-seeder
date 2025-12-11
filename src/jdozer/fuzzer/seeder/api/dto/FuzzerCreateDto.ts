@@ -17,8 +17,4 @@ export class FuzzerCreateDto {
     @IsString()
     version: string;
 
-    @IsNotEmpty()
-    @IsUUID()
-    owner: UUID;
-
 }
