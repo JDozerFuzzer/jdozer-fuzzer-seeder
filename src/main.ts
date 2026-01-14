@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConsoleLogger, LogLevel, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerConfig } from './LoggerConfig';
+import { Logger } from '@nestjs/common';
 
 
 async function bootstrap() {
@@ -19,13 +20,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: LoggerConfig.logLevels('JDozerFuzzer-Seeder')
   });
-  
+
   app.enableCors({
     origin: ['http://localhost:3000'],
     methods: ['POST']
   });
   app.useGlobalPipes(new ValidationPipe());
-  console.debug(process.env.FUZZER_SEEDER_PORT);
-  await app.listen(+process.env.FUZZER_SEEDER_PORT || 3002);
+
+  const port = +process.env.FUZZER_SEEDER_PORT || 3002;
+  const logger = new Logger('JDozerFuzzer-Seeder-bootstrap');
+
+  logger.log(`FUZZER_SEEDER_PORT: ${process.env.FUZZER_SEEDER_PORT}`);
+  await app.listen(port);
 }
 bootstrap();
