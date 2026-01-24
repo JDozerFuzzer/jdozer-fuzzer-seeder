@@ -25,9 +25,9 @@ export class JDozerFuzzerEngineCfg {
         this.engineCfg.config.variables.testId = this.fuzzer.id;
         this.engineCfg.config.plugins[`publish-metrics`][0].tags.push(`jdozer:${this.fuzzer.name}`);
 
-        let server: any[] = this.fuzzer.servers.filter(server => server.description === 'TESTING');
+        let server: any[] = this.fuzzer.servers.filter(server => server.description === 'FUZZING');
         if (server.length == 0) {
-            const error = { message: `build: The fuzzer ${this.fuzzer.name} has no server with description 'TESTING'`, detail: 'No enveironment selected' };
+            const error = { message: `build: The fuzzer ${this.fuzzer.name} has no server with description 'FUZZING'`, detail: 'No enveironment selected' };
             this.log.error(error);
             throw new EngineException(error);
         }
