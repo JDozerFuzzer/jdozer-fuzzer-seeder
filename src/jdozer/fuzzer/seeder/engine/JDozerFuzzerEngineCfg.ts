@@ -24,14 +24,7 @@ export class JDozerFuzzerEngineCfg {
 
         this.engineCfg.config.variables.testId = this.fuzzer.id;
         this.engineCfg.config.plugins[`publish-metrics`][0].tags.push(`jdozer:${this.fuzzer.name}`);
-
-        let server: any[] = this.fuzzer.servers.filter(server => server.description === 'FUZZING');
-        if (server.length == 0) {
-            const error = { message: `build: The fuzzer ${this.fuzzer.name} has no server with description 'FUZZING'`, detail: 'No enveironment selected' };
-            this.log.error(error);
-            throw new EngineException(error);
-        }
-        this.engineCfg.config.target = (server.length == 1 ? server[0].url : undefined);
+        this.engineCfg.config.target = this.getServerUrl(this.fuzzer.servers);
 
         for (let id of this.fuzzer.operationIds) {
             const op: FuzzerOperation = await this.redis.get(this.keyManager.forOperation(id, this.fuzzer.id));
@@ -47,10 +40,30 @@ export class JDozerFuzzerEngineCfg {
 
     }
 
+    private getServerUrl(servers: any[]) {
+
+        let server: any[] = servers.filter(server => server.description === 'FUZZING');
+        if (server.length === 0) {
+            const error = { message: `The fuzzer ${this.fuzzer.name} has no server with description 'FUZZING'`, detail: 'No enveironment selected' };
+            this.log.error(error);
+            throw new EngineException(error);
+        }
+
+        try {
+            const serverUrl: URL = new URL(server[0].url);
+            return serverUrl.toString();
+        } catch (e) {
+            const error = { message: `The fuzzer ${this.fuzzer.name} has an invalid server URL: ${server[0].url}` };
+            this.log.error(error);
+            throw new EngineException(error);
+        }
+
+    }
+
     private getScenarios(operation: FuzzerOperation) {
         return {
             name: `${operation.name}`,
-            beforeScenario: `beforeScenario`,
+            //beforeScenario: `beforeScenario`,
             flow: []
         };
     }

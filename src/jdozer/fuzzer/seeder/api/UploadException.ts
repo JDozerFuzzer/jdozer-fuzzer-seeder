@@ -14,5 +14,5 @@ export class UploadException implements ExceptionFilter {
         const res = host.switchToHttp().getResponse<Response>();
         res.status(exception.status).json(exception);
     }
-    
+
 }

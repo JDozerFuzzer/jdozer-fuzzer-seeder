@@ -68,8 +68,8 @@ export class JDozerFuzzerSeeder {
     }
 
     async buildEngine(fuzzer: Fuzzer) {
-        let artilleryCfg: JDozerFuzzerEngineCfg = new JDozerFuzzerEngineCfg(fuzzer, this.redis);
-        return await artilleryCfg.build();
+        let engineCfg: JDozerFuzzerEngineCfg = new JDozerFuzzerEngineCfg(fuzzer, this.redis);
+        return await engineCfg.build();
     }
 
 }

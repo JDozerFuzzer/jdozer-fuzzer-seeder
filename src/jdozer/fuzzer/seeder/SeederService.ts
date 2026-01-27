@@ -46,10 +46,10 @@ export class SeederService {
         details: error.message
       };
 
-      this.log.error(`create: ${error.message}`);
+      this.log.error(`${error.message}`);
       this.log.verbose(`FuzzerCreateDto: ${JSON.stringify(fuzzerCreateDto)}`);
       this.eventService.publishEvent(EventService.EVENT_TYPE.BUILD_FAILURE, errorMessage, null);
-      throw new SeederException(errorMessage);
+      throw new SeederException(error);
 
     }
   }
