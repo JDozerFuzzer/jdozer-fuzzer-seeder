@@ -12,6 +12,7 @@ import { generate } from './generator/Generator';
 import { RedisService } from "../persistence/RedisService";
 import { Logger } from "@nestjs/common";
 import { KeyManager } from "../persistence/KeyManager";
+import { SeederException } from "../SeederException";
 
 
 export class JDozerFuzzerDummy {
@@ -21,12 +22,14 @@ export class JDozerFuzzerDummy {
 
     constructor(private readonly fuzzer: Fuzzer, private readonly redis: RedisService) { }
 
-    async build() {
-        this.fuzzer.operationIds.forEach(async id => {
-            let op: FuzzerOperation = await this.getOperation(id);
-            this.dummy(op);
-        });
-        return;
+    async build(): Promise<any> {
+        let dummyCant: any = {};
+        for (let opId of this.fuzzer.operationIds) {
+            let op: FuzzerOperation = await this.getOperation(opId);
+            dummyCant[op.name] = await this.dummy(op);
+            this.log.verbose(`Dummy created for operation ${op.name} ${JSON.stringify(dummyCant[op.name])}`);
+        }
+        return dummyCant;
     }
 
     private async getOperation(operationId: string): Promise<FuzzerOperation> {
@@ -34,6 +37,8 @@ export class JDozerFuzzerDummy {
     }
 
     private async dummy(operation: FuzzerOperation) {
+
+        const promises: Promise<any>[] = [];
 
         let dummy: FuzzerDummy = new FuzzerDummy();
         dummy.payloads = this.createDummy(operation.req.payload);
@@ -43,24 +48,32 @@ export class JDozerFuzzerDummy {
         dummy.id = randomUUID() as UUID;
 
         for (let d of dummy.payloads) {
-            this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'payload', d.id), d);
-            // await this.redis.set(operation.name.concat(':payload:'.concat(d.id)), d);
+            promises.push(this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'payload', d.id), d));
         }
 
         for (let d of dummy.headers) {
-            this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'headers', d.id), d);
+            promises.push(this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'headers', d.id), d));
         }
 
         for (let d of dummy.querys) {
-            this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'query', d.id), d);
-            // await this.redis.set(operation.name.concat(':query:').concat(d.id), d);
+            promises.push(this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'query', d.id), d));
         };
 
         for (let d of dummy.paths) {
-            this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'path', d.id), d);
+            promises.push(this.redis.set(this.keyManager.forFake(this.fuzzer.id, operation.name, 'path', d.id), d));
         };
 
-        return;
+        return await Promise.all(promises).then(() => {
+            return {
+                payloads: dummy.payloads.length,
+                headers: dummy.headers.length,
+                querys: dummy.querys.length,
+                paths: dummy.paths.length
+            };
+        }).catch(e => {
+            this.log.error(`Error building dummy for operation ${operation.name}: ${e.message}`);
+            throw new SeederException(e);
+        });
     }
 
     private createDummy(schema: any) {

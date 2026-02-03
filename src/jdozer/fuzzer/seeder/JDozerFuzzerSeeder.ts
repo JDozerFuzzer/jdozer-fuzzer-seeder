@@ -13,7 +13,7 @@ import { UniqueList } from "../utils/UniqueList";
 import { SeederException } from "./SeederException";
 import { Logger } from "@nestjs/common";
 import { KeyManager } from "./persistence/KeyManager";
-
+import { EventService } from "./event/EventService";
 
 export class JDozerFuzzerSeeder {
 
@@ -22,7 +22,7 @@ export class JDozerFuzzerSeeder {
     private fuzzer: Fuzzer;
     private keyManager: KeyManager = new KeyManager();
 
-    constructor(private readonly redis: RedisService) { }
+    constructor(private readonly redis: RedisService, private readonly eventService: EventService) { }
 
     async buildFuzzer(contract: any, fields: any): Promise<Fuzzer> {
 
@@ -64,7 +64,7 @@ export class JDozerFuzzerSeeder {
 
     async buildDummy(fuzzer: Fuzzer) {
         let dummy: JDozerFuzzerDummy = new JDozerFuzzerDummy(fuzzer, this.redis);
-        await dummy.build();
+        return await dummy.build();
     }
 
     async buildEngine(fuzzer: Fuzzer) {
