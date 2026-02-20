@@ -51,7 +51,7 @@ export class JDozerFuzzerEngineCfg {
 
         try {
             const serverUrl: URL = new URL(server[0].url);
-            return serverUrl.toString();
+            return serverUrl.toString().slice(0, -1);
         } catch (e) {
             const error = { message: `The fuzzer ${this.fuzzer.name} has an invalid server URL: ${server[0].url}` };
             this.log.error(error);

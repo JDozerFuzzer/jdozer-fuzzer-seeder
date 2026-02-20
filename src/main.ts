@@ -30,7 +30,7 @@ async function bootstrap() {
   const port = +process.env.FUZZER_SEEDER_PORT || 3002;
   const logger = new Logger('JDozerFuzzer-Seeder-bootstrap');
 
-  logger.log(`FUZZER_SEEDER_PORT: ${process.env.FUZZER_SEEDER_PORT}`);
   await app.listen(port);
+  logger.log(`FUZZER_SEEDER_PORT: ${port}`);
 }
 bootstrap();
