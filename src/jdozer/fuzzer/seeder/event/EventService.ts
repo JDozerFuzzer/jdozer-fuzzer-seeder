@@ -43,7 +43,7 @@ export namespace EventService {
         BUILD_START = 'build-start',
         BUILD_STOP = 'build-stop',
         BUILD_PAUSE = 'build-pause',
-        READ_CONTRACT = 'read-contract-runtime',
+        READ_CONTRACT = 'read-contract',
         ERROR = 'error',
         CASES_CREATED = 'cases-created'
     }

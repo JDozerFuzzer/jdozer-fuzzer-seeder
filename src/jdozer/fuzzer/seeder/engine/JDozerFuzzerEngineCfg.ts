@@ -102,8 +102,8 @@ export class JDozerFuzzerEngineCfg {
             }],
             defaults: {
                 headers: {
-                    [`Content-Type`]: `application/json`,
-                    Authorization: `Bearer akjhdaskjhdkashdakjshda`
+                    [`Content-Type`]: `application/json`
+                    //Authorization: `Bearer akjhdaskjhdkashdakjshda`
                 }
             },
             variables: {
@@ -113,7 +113,7 @@ export class JDozerFuzzerEngineCfg {
         scenarios: [],
         after: {
             flow: [{
-                function: `afterTest`
+                function: `attackCompleted`
             }]
         }
     };
